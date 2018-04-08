@@ -15,8 +15,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./visualize_dataset.PNG "Visualization"
-[image2]: ./visualize_norm.PNG "Normalization"
+[image1]: ./visualize_dataset.jpg "Visualization"
+[image2]: ./visualize_norm.jpg "Normalization"
 [image3]: ./examples/random_noise.jpg "Random Noise"
 [image5]: ./Traffic_Signs/00317.jpg "Traffic Sign 2"
 [image4]: ./Traffic_Signs/00579.jpg "Traffic Sign 1"
