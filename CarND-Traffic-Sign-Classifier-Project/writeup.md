@@ -110,7 +110,7 @@ I choose to use the hyperparameters almost the same as LeNet 5, except the input
 
 The model achieve a good accuracy at the first attempt. However, I found the convergence speed was slow, and the final validation accuracy is only a bit higher than 0.93.
 
-Then I decided to add dropout layer because it can effectively prevent model from overfitting. The result is very good. Model convergence much faster, and the final validation accuracy achieved 0.96.
+Then I decided to add dropout layer because it can effectively prevent model from overfitting. The result is very good. Model convergence much faster, and the final validation accuracy achieved 0.953.
 
 ### Test a Model on New Images
 
