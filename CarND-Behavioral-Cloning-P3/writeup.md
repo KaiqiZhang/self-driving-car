@@ -11,18 +11,15 @@ The goals / steps of this project are the following:
 * Test that the model successfully drives around track one without leaving the road
 * Summarize the results with a written report
 
-### Demo video link:
-
 
 [//]: # (Image References)
 
-[image1]: ./cnn-architecture.png "Nvidia Model Architecture"
-[image2]: ./viz_dataset.png "Dataset Visualization"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./docs/cnn-architecture.png "Nvidia Model Architecture"
+[image2]: ./docs/viz_dataset.png "Dataset Visualization"
+[image3]: ./docs/left.jpg "Left Camera"
+[image4]: ./docs/center.jpg "Center Camera"
+[image5]: ./docs/right.jpg "Right Camera"
+[image6]: ./docs/demo.gif "Demo Gif"
 
 ---
 
@@ -52,7 +49,11 @@ The model architecture is shown below:
 
 ## 3. Data augmentation
 ### Visualizing the dataset
+I use the dataset downloaded from the Udacity course materials. The distribution of steering angles is shown below. As we can see, most of them is the case when car is in the center of the track. For a proper training, we should make the model learn how to deal with different situations.
+
 ![alt text][image2]
+
+To avoid this problem taken by dataset, I used the following augmentation techniques in Keras data generator to generate new images.
 
 ### Crop the images
 The top portion of the image captures trees, hills and sky. The bottom portion of the image captures the hood of the car. To avoid these disturbs, I cropped:
@@ -63,8 +64,14 @@ The top portion of the image captures trees, hills and sky. The bottom portion o
 * 0 column of pixels from the right of the image
 
 ### Randomly choose camera
+Each frame of the dataset contains pictures from 3 cameras: center, left, and right. We can. In the data generator, I made the code randomly choose a image from center, left or right camera. Of course, we should shift the steering angle for the corresponding image. For the left image, steering angle is adjusted by +0.2. For the right image, steering angle is adjusted by -0.2.
+
+Left | Center | Right
+-----|--------|-------
+![alt text][image3] | ![alt text][image4] | ![alt text][image5]
 
 ### Randomly flipping
+Just by flipping the image, we can get a new input data. (Of course, we should multiple the target steering angle by -1.0) This is a effective technique to deal with left turn bias. In the data generator, I made the code randomly choose to flip a image or not.
 
 ## 4. Training and Fine-tuning
 To avoid loading to many images to the memory, I use two generators to generator the training and testing batches. I used `fit_generator` API of Keras to conduct batch training and testing. The batch size is set to 32.
@@ -85,4 +92,6 @@ I tuned the shifting steering angle for the images from left and right camera. A
 ## 5. Test Results
 With the model, the car can drive smoothly on the track without bumping into the side ways. Just like a human! See demo video below:
 
-[video.mp4]()
+![alt text][image6]
+
+[YouTube Link](https://youtu.be/iBmzKmPdZIo)
