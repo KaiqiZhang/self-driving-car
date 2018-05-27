@@ -2,10 +2,12 @@ import csv
 import cv2
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 
-from keras.utils import Sequence
 from keras.models import Sequential
 from keras.layers import Conv2D, Flatten, Dropout, Dense, Lambda, Cropping2D
+from keras.utils import Sequence
+from keras.utils.vis_utils import plot_model
 
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
@@ -14,6 +16,7 @@ BATCH_SIZE = 32
 STEER_DELTA = 0.2
 
 def get_nvidia_model():
+    # model from NVIDIA paper
     model = Sequential()
     model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
     model.add(Cropping2D(cropping=((70,25), (0,0))))
@@ -23,6 +26,7 @@ def get_nvidia_model():
     model.add(Conv2D(64, kernel_size=(3,3), padding='valid', activation='relu', strides=(1,1)))
     model.add(Conv2D(64, kernel_size=(3,3), padding='valid', activation='relu', strides=(1,1)))
     model.add(Flatten())
+    model.add(Dropout(0.5))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(50, activation='relu'))
     model.add(Dense(10, activation='relu'))
@@ -71,12 +75,25 @@ def generator(samples, batch_size=32):
 
             yield x_train, y_train
 
+def visualize(lines):
+    measurements = []
+    for line in lines:
+        measurement = float(line[3])
+        measurements.append(measurement)
+
+    plt.hist(measurements, bins=80)
+    plt.title("Steering angle distribution")
+    plt.show()
+
 if __name__ == '__main__':
     # get data
     lines = []
     with open('../../data/driving_log.csv') as csvfile:
         reader = csv.reader(csvfile)
         lines = [line for line in reader][1:]
+
+    # visualize dataset
+    #visualize(lines)
 
     # split
     train_samples, validation_samples = train_test_split(lines, test_size=0.2)
@@ -85,6 +102,8 @@ if __name__ == '__main__':
 
     # get model
     model = get_nvidia_model()
+    #plot_model(model, to_file='model.png', show_shapes=True)
+
     model.compile(loss='mse', optimizer='adam')
 
     # train model
